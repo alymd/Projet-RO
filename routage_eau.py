@@ -36,15 +36,15 @@ def solve_routing():
     result = solver.solve(model)
 
     if result.solver.termination_condition == TerminationCondition.optimal:
-        print("\n--- Optimal Route ---")
-        total_dist = 0
+        print("\n--- Itinéraire Optimal ---")
+        distance_totale = 0
         for (i, j) in dist.keys():
             if model.x[i, j].value and round(model.x[i, j].value) == 1:
-                print(f"  {i} → {j}  (distance: {dist[i,j]})")
-                total_dist += dist[i, j]
-        print(f"Total distance: {total_dist}")
+                print(f"  Point {i} → Point {j}  (distance : {dist[i,j]})")
+                distance_totale += dist[i, j]
+        print(f"Distance totale : {distance_totale}")
     else:
-        print(f"Solver failed: {result.solver.termination_condition}")
+        print(f"Échec du solveur : {result.solver.termination_condition}")
 
 if __name__ == "__main__":
     solve_routing()
