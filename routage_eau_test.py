@@ -12,7 +12,7 @@ def solve_routing():
         (3,0): 10, (3,1): 7, (3,2): 3
     }
 
-    model.x = Var(points, points, domain=Binary)
+    model.x = Var(dist.keys(), domain=Binary)
     model.u = Var(points, domain=NonNegativeReals) 
 
     def obj_rule(model):
@@ -23,6 +23,13 @@ def solve_routing():
     for i in points:
         model.cons1.add(sum(model.x[i,j] for j in points if (i,j) in dist) == 1)
         model.cons1.add(sum(model.x[j,i] for j in points if (j,i) in dist) == 1)
+
+    model.mtz = ConstraintList()
+    n = len(points)
+    for i in points:
+        for j in points:
+            if i != 0 and j != 0 and i != j and (i,j) in dist:
+                model.mtz.add(model.u[i] - model.u[j] + n * model.x[i,j] <= n - 1)
 
     solver = SolverFactory('glpk')
     solver.solve(model)
